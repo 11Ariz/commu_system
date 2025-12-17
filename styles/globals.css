@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #__next {
+  height: 100%;
+}
+
+/* Basic glassmorphism background */
+body {
+  @apply bg-gradient-to-br from-slate-50 to-white dark:from-gray-900 dark:to-slate-800 text-slate-800 dark:text-slate-100 antialiased;
+}
+
+.glass-card {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px) saturate(120%);
+}
