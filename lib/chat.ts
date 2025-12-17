@@ -6,6 +6,10 @@ export type Message = {
   text: string
   author?: string
   createdAt?: any
+  authorUid?: string | null
+  repliedToId?: string | null
+  repliedToAuthor?: string | null
+  repliedToText?: string | null
 }
 
 // Listen to messages in a room. Returns unsubscribe function.

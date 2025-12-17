@@ -8,6 +8,7 @@ export type Assignment = {
   createdAt?: any
   dueDate?: string | null
   createdBy?: string | null
+  courseId?: string | null
 }
 
 export type Submission = {
