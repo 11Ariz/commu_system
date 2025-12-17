@@ -10,7 +10,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000
+
 
 What is included:
 - Next.js + TypeScript scaffold
