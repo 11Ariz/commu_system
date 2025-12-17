@@ -22,7 +22,7 @@ export default function AssignmentsPage() {
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-semibold">Assignments</h1>
           {user?.role === 'teacher' && (
-            <Link href="/assignments/create"><a className="px-3 py-1 rounded border">Create</a></Link>
+            <Link href="/assignments/create" className="px-3 py-1 rounded border">Create</Link>
           )}
         </div>
 

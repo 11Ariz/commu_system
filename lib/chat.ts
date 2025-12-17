@@ -1,5 +1,5 @@
 import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from 'firebase/firestore'
-import { db } from './firebase'
+import { db, auth } from './firebase'
 
 export type Message = {
   id: string
@@ -28,14 +28,24 @@ export function listenToRoomMessages(roomId: string, cb: (msgs: Message[]) => vo
   }
 }
 
-export async function sendMessage(roomId: string, text: string, author = 'Anonymous') {
+export async function sendMessage(roomId: string, text: string, author = 'Anonymous', repliedToId?: string | null, repliedToAuthor?: string | null, repliedToText?: string | null) {
   if (!db || !roomId) return
   try {
-    await addDoc(collection(db, 'rooms', roomId, 'messages'), {
+    const authorUid = auth && auth.currentUser ? auth.currentUser.uid : null
+    const authorName = auth && auth.currentUser ? (auth.currentUser.displayName || auth.currentUser.email) : author
+    const payload: any = {
       text,
-      author,
+      author: authorName,
+      authorUid,
       createdAt: serverTimestamp(),
-    })
+    }
+    if (repliedToId) {
+      payload.repliedToId = repliedToId
+      if (repliedToAuthor) payload.repliedToAuthor = repliedToAuthor
+      if (repliedToText) payload.repliedToText = repliedToText
+    }
+
+    await addDoc(collection(db, 'rooms', roomId, 'messages'), payload)
   } catch (err) {
     console.error('sendMessage error:', err)
     throw err

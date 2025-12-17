@@ -1,5 +1,5 @@
 import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, getDoc, setDoc } from 'firebase/firestore'
-import { db } from './firebase'
+import { db, auth } from './firebase'
 
 export type Assignment = {
   id?: string
@@ -13,6 +13,7 @@ export type Assignment = {
 export type Submission = {
   id?: string
   author?: string | null
+  authorUid?: string | null
   text?: string
   createdAt?: any
   grade?: number | null
@@ -39,7 +40,11 @@ export function listenToAssignments(cb: (items: Assignment[]) => void) {
 export async function createAssignment(a: Assignment) {
   if (!db) return null
   try {
-    const ref = await addDoc(collection(db, 'assignments'), { ...a, createdAt: serverTimestamp() })
+    // Attach creator info when available
+    const createdByUid = auth && auth.currentUser ? auth.currentUser.uid : (a.createdBy || null)
+    const createdByName = auth && auth.currentUser ? (auth.currentUser.displayName || auth.currentUser.email) : null
+    const payload = { ...a, createdAt: serverTimestamp(), createdByUid, createdByName }
+    const ref = await addDoc(collection(db, 'assignments'), payload)
     return ref.id
   } catch (err) {
     console.error('createAssignment error', err)
@@ -61,7 +66,10 @@ export async function getAssignment(id: string) {
 export async function submitAssignment(assignmentId: string, s: Submission) {
   if (!db) return null
   try {
-    const ref = await addDoc(collection(db, 'assignments', assignmentId, 'submissions'), { ...s, createdAt: serverTimestamp() })
+    const authorUid = s.authorUid || (auth && auth.currentUser ? auth.currentUser.uid : null)
+    const authorName = s.author || (auth && auth.currentUser ? (auth.currentUser.displayName || auth.currentUser.email) : null)
+    const payload = { ...s, authorUid, author: authorName, createdAt: serverTimestamp() }
+    const ref = await addDoc(collection(db, 'assignments', assignmentId, 'submissions'), payload)
     return ref.id
   } catch (err) {
     console.error('submitAssignment error', err)

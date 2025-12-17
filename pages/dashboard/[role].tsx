@@ -23,13 +23,13 @@ export default function DashboardRole() {
               <div className="p-4 glass-card rounded">Project Board: AI Study Assistant</div>
             </section>
 
-            <section className="mt-6">
-              <h2 className="font-medium mb-2">Quick Actions</h2>
-              <div className="flex gap-3">
-                <Link href="/chat/general"><a className="px-3 py-2 rounded border">Open Chat</a></Link>
-                <Link href="/dashboard/projects"><a className="px-3 py-2 rounded border">Open Projects</a></Link>
-              </div>
-            </section>
+              <section className="mt-6">
+                <h2 className="font-medium mb-2">Quick Actions</h2>
+                <div className="flex gap-3">
+                  <Link href="/chat/general" className="px-3 py-2 rounded border">Open Chat</Link>
+                  <Link href="/dashboard/projects" className="px-3 py-2 rounded border">Open Projects</Link>
+                </div>
+              </section>
           </div>
         </main>
       </div>

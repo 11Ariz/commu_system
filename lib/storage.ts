@@ -16,3 +16,18 @@ export async function uploadSubmissionFile(assignmentId: string, file: File) {
     return null
   }
 }
+
+export async function uploadFile(pathPrefix: string, file: File) {
+  try {
+    const storage = getStorage()
+    const uid = auth && auth.currentUser ? auth.currentUser.uid : 'anonymous'
+    const path = `${pathPrefix}/${uid}/${Date.now()}_${file.name}`
+    const storageRef = ref(storage, path)
+    const snap = await uploadBytesResumable(storageRef, file)
+    const url = await getDownloadURL(snap.ref)
+    return url
+  } catch (err) {
+    console.error('uploadFile error', err)
+    return null
+  }
+}

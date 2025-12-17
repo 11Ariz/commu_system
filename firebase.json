@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "public": "out",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/_next/**",
+        "destination": "/_next/**"
+      },
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "next-app",
+          "region": "us-central1"
+        }
+      }
+    ]
+  }
+}

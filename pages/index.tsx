@@ -8,12 +8,8 @@ export default function Home() {
         <p className="text-slate-600 dark:text-slate-300 mb-6">Collaborate on courses, research, assignments and projects — all in one place.</p>
 
         <div className="flex gap-4">
-          <Link href="/login">
-            <a className="px-4 py-2 rounded bg-indigo-600 text-white">Get Started</a>
-          </Link>
-          <Link href="/dashboard/student">
-            <a className="px-4 py-2 rounded border">Demo: Student Dashboard</a>
-          </Link>
+          <Link href="/login" className="px-4 py-2 rounded bg-indigo-600 text-white">Get Started</Link>
+          <Link href="/dashboard/student" className="px-4 py-2 rounded border">Demo: Student Dashboard</Link>
         </div>
 
         <section className="mt-8">

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { auth } from '../lib/firebase'
+import { setUserProfile } from '../lib/users'
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth'
 import { getUserProfile } from '../lib/users'
 
@@ -48,6 +49,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   function setRole(role: string) {
     localStorage.setItem('role', role)
     setUser((prev) => ({ ...prev, role }))
+    // Persist role to Firestore user profile when authenticated
+    try {
+      if (auth && auth.currentUser) {
+        setUserProfile(auth.currentUser.uid, { role })
+      }
+    } catch (err) {
+      console.warn('Failed to persist role to profile:', err)
+    }
   }
 
   return <UserContext.Provider value={{ user, setRole }}>{children}</UserContext.Provider>

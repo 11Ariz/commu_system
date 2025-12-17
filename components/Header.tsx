@@ -17,18 +17,18 @@ export default function Header() {
   }
 
   return (
-    <header className="w-full p-4 bg-white dark:bg-slate-800 border-b">
+    <header className="w-full p-4 bg-indigo-600 text-white border-b">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link href="/"><a className="font-bold text-lg">AcademicCollab</a></Link>
+        <Link href="/" className="font-bold text-lg">AcademicCollab</Link>
         <nav className="flex items-center gap-3">
-          <a className="text-sm">Notifications</a>
+          <div className="text-sm">Notifications</div>
           {user && user.uid ? (
             <>
               <div className="text-sm">{user.displayName || user.email || 'User'}</div>
-              <button onClick={handleSignOut} className="px-3 py-1 text-sm border rounded">Sign out</button>
+              <button onClick={handleSignOut} className="px-3 py-1 text-sm border rounded bg-white text-indigo-600">Sign out</button>
             </>
           ) : (
-            <Link href="/login"><a className="text-sm">Sign in</a></Link>
+            <Link href="/login" className="text-sm bg-white text-indigo-600 px-3 py-1 rounded">Sign in</Link>
           )}
         </nav>
       </div>

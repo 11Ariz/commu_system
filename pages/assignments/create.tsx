@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Header from '../../components/Header'
 import { createAssignment } from '../../lib/assignments'
+import { db } from '../../lib/firebase'
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { useUser } from '../../contexts/UserContext'
 
 export default function CreateAssignment() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [dueDate, setDueDate] = useState<string | null>(null)
+  const [courseId, setCourseId] = useState<string | null>(null)
+  const [courses, setCourses] = useState<any[]>([])
   const router = useRouter()
   const { user } = useUser()
 
@@ -16,12 +20,22 @@ export default function CreateAssignment() {
     if (user && user.role && user.role !== 'teacher') {
       router.replace('/assignments')
     }
+    // load courses
+    if (db) {
+      const q = query(collection(db, 'courses'), orderBy('createdAt', 'desc'))
+      const unsub = onSnapshot(q, (snap) => {
+        const arr: any[] = []
+        snap.forEach(d => arr.push({ id: d.id, ...d.data() }))
+        setCourses(arr)
+      })
+      return () => unsub()
+    }
   }, [user])
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
     try {
-      const id = await createAssignment({ title, description, dueDate })
+      const id = await createAssignment({ title, description, dueDate, courseId })
       if (id) router.push(`/assignments/${id}`)
     } catch (err) {
       console.error('Create failed', err)
@@ -46,6 +60,10 @@ export default function CreateAssignment() {
           <input value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="Title" className="w-full p-2 border rounded" />
           <textarea value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Description" className="w-full p-2 border rounded" />
           <input type="date" onChange={(e)=>setDueDate(e.target.value)} className="p-2 border rounded" />
+          <select value={courseId || ''} onChange={(e)=>setCourseId(e.target.value || null)} className="p-2 border rounded w-full">
+            <option value="">-- Select course (optional) --</option>
+            {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+          </select>
           <div>
             <button className="px-4 py-2 bg-indigo-600 text-white rounded">Create</button>
           </div>
